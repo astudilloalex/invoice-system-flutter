@@ -1,4 +1,8 @@
 {
+    "appTitle": "Love Invoice",
     "loading": "Loading",
-    "signIn": "Sign in"
+    "password": "Password",
+    "signIn": "Sign in",
+    "usernameOrEmail": "Usernamer or email",
+    "welcomeBack": "Welcome back!"
 }

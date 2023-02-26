@@ -16,10 +16,16 @@ class SignInForm extends StatelessWidget {
       child: Column(
         children: [
           // Username input.
-          TextFormField(
-            controller: controller.usernameController,
-            keyboardType: TextInputType.name,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+          Obx(
+            () => TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: controller.usernameController,
+              decoration: InputDecoration(
+                labelText: localizations.usernameOrEmail,
+              ),
+              keyboardType: TextInputType.name,
+              readOnly: controller.loading,
+            ),
           ),
           const SizedBox(height: 16.0),
           // Password input.
@@ -27,17 +33,20 @@ class SignInForm extends StatelessWidget {
             () => TextFormField(
               controller: controller.passwordController,
               decoration: InputDecoration(
+                labelText: localizations.password,
                 suffixIcon: IconButton(
                   icon: Icon(
                     controller.visiblePassword
                         ? Icons.visibility
                         : Icons.visibility_off,
                   ),
-                  onPressed: controller.passwordVisibility,
+                  onPressed:
+                      controller.loading ? null : controller.passwordVisibility,
                 ),
               ),
               keyboardType: TextInputType.visiblePassword,
               obscureText: !controller.visiblePassword,
+              readOnly: controller.loading,
             ),
           ),
           const SizedBox(height: 16.0),
