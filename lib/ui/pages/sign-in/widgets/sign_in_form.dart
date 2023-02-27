@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:invoice_system/ui/pages/sign-in/controllers/sign_in_controller.dart';
+import 'package:invoice_system/utilities/util.dart';
 
 class SignInForm extends StatelessWidget {
   const SignInForm({super.key});
@@ -53,7 +54,9 @@ class SignInForm extends StatelessWidget {
           // Sign in button.
           Obx(
             () => ElevatedButton.icon(
-              onPressed: controller.loading ? null : controller.signIn,
+              onPressed: controller.loading
+                  ? null
+                  : () => _signIn(context, controller),
               icon: controller.loading
                   ? const SizedBox(
                       height: 18.0,
@@ -71,5 +74,18 @@ class SignInForm extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _signIn(
+    BuildContext context,
+    SignInController controller,
+  ) async {
+    final String? error = await controller.signIn();
+    if (context.mounted) {
+      if (error != null) {
+        showError(context, error);
+        return;
+      }
+    }
   }
 }

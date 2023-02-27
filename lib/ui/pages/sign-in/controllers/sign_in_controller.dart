@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:invoice_system/src/user/domain/repositories/user_repository.dart';
-import 'package:invoice_system/src/user/domain/responses/sign_in_response.dart';
-import 'package:invoice_system/src/user/infrastructure/http_user_repository.dart';
+import 'package:invoice_system/src/common.dart';
+import 'package:invoice_system/src/user/application/user_service.dart';
 import 'package:invoice_system/utilities/util.dart';
 
 class SignInController extends GetxController {
-  final UserRepository _repository = getIt<UserRepository>();
+  final UserService _service = getIt<UserService>();
+  final SecureLocalData _secureLocalData = getIt<SecureLocalData>();
 
   final RxBool _visiblePassword = RxBool(false);
   final RxBool _loading = RxBool(false);
@@ -27,10 +29,14 @@ class SignInController extends GetxController {
   Future<String?> signIn() async {
     try {
       _loading(true);
-      await _repository.signIn(
-        usernameController.text.trim(),
-        passwordController.text,
+      await _secureLocalData.saveJWT(
+        await _service.signIn(
+          usernameController.text.trim(),
+          passwordController.text,
+        ),
       );
+    } on HttpException catch (ex) {
+      return ex.message;
     } finally {
       _loading(false);
     }
